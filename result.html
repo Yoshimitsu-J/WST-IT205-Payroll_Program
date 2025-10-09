@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="GRCIcon.png" type="image/png">
+    <link rel="stylesheet" href="styles.css">
+    <title>Payroll Result</title>
+</head>
+<body>
+    <div class="navigationbar">
+        <div class="logo">
+            <img src="Images/Navigationlogo.png" class="navlogo" alt="Logo">
+            <h1>GRC Payroll Calculator</h1>
+            <!-- I don't want to use GRC's name -->
+        </div>
+        <div class="pages">
+            <a href="index.html" class="formpage">FORM</a>
+            <a href="result.html" class="resultpage">RESULT</a>
+        </div>
+    </div>
+
+    <div class="main">
+        <h2 style="text-align:center; color:maroon;">Payroll Result</h2>
+        <div class="resultBox">
+            <div id="resultContent"></div>
+            <button class="computeAnother" onclick="window.location.href='index.html'">Compute another</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

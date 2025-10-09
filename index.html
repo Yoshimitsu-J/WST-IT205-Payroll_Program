@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="GRCIcon.png" type="image/png">
+    <link rel="stylesheet" href="styles.css">
+    <title>Payroll Calculator</title>
+</head>
+<body>
+    <div class="navigationbar">
+        <div class="logo">
+            <img src="Images/Navigationlogo.png" class="navlogo" alt="Logo">
+            <h1>GRC Payroll Calculator</h1>
+            <!-- I don't want to use GRC's name -->
+        </div>
+        <div class="pages">
+            <a href="index.html" class="formpage">FORM</a>
+            <a href="result.html" class="resultpage">RESULT</a>
+        </div>
+    </div>
+
+    <div class="form">
+        <form class="payroll-form" id="payrollForm" autocomplete="off" action="result.html" method="GET">
+            <h2>Payroll Computation</h2>
+            <div class="input-group">
+                <label for="employeeName">Employee Name</label>
+                <input type="text" id="employeeName" name="employeeName" placeholder="e.g. Dela Cruz, Juan" required>
+            </div>
+            <div class="input-group">
+                <label for="rate">Daily Rate (₱)</label>
+                <input type="number" id="rate" name="rate" min="0" placeholder="e.g. 500.00" required>
+            </div>
+            <div class="input-group">
+                <label for="daysWorked">Days Worked</label>
+                <input type="number" id="daysWorked" name="daysWorked" min="0" placeholder="e.g. 22" required>
+            </div>
+            <button type="submit" class="compute-btn" onclick="computePayroll()">Compute Payroll</button>
+
+            <div class="instructions">
+                <p><b>Information</b></p>
+                <ul>
+                    <li>Gross Pay = Rate x Days Worked</li>
+                    <li>SSS Deduction = 5% of Gross Pay</li>
+                    <li>Pag-ibig Deduction = 3% of Gross Pay</li>
+                    <li>Philhealth Deduction = 2% of Gross Pay</li>
+                    <li>Tax Deduction = 5% of Gross Pay</li>
+                    <li>Total Deduction = SSS + Pag-ibig + Philhealth + Tax</li>
+                    <li>Net Pay = Gross Pay - Total Deduction</li>
+                </ul>
+            </div>
+        </form>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
