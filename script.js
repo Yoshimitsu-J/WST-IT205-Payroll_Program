@@ -12,9 +12,12 @@ if (window.location.pathname.endsWith("result.html")) {
         var days = parseFloat(getQueryParam('daysWorked'));
 
         // Combine name
-        var name = surname + ', ' + firstname + ' ' + middlename;
+        var name = surname + ', ' + firstname;
+        if (middlename) {
+            name += ' ' + middlename;
+        }
 
-        if (surname && firstname && middlename && !isNaN(rate) && !isNaN(days)) {
+        if (surname && firstname && !isNaN(rate) && !isNaN(days)) {
             var grossPay = rate * days;
             var sss = grossPay * 0.05;
             var pagibig = grossPay * 0.03;

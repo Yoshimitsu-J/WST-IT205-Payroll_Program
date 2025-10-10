@@ -33,8 +33,8 @@
                 <span class="warning" id="firstnameWarning"></span>
             </div>
             <div class="input-group">
-                <label for="middlename">Middlename</label>
-                <input type="text" id="middlename" name="middlename" placeholder="e.g. Santos" required>
+                <label for="middlename">Middlename <span style="font-weight:normal;color:#888;">(optional)</span></label>
+                <input type="text" id="middlename" name="middlename" placeholder="e.g. Santos">
                 <span class="warning" id="middlenameWarning"></span>
             </div>
             <div class="input-group">
@@ -75,12 +75,16 @@
     <script src="script.js"></script>
     <script>
         function isAlpha(str) {
-        return /^[A-Za-z\s\-]+$/.test(str);
-    }
+            return /^[A-Za-z\s\-]+$/.test(str);
+        }
 
-        function validateNameInput(inputId, warningId) {
+        function validateNameInput(inputId, warningId, required = true) {
             const value = document.getElementById(inputId).value.trim();
             const warning = document.getElementById(warningId);
+            if (!value && !required) {
+                warning.textContent = "";
+                return true;
+            }
             if (!isAlpha(value)) {
                 warning.textContent = "Invalid character";
                 return false;
@@ -97,13 +101,14 @@
             validateNameInput('firstname', 'firstnameWarning');
         });
         document.getElementById('middlename').addEventListener('input', function() {
-            validateNameInput('middlename', 'middlenameWarning');
-        })  
+            validateNameInput('middlename', 'middlenameWarning', false);
+        });
+
         document.getElementById('computeBtn').addEventListener('click', function() {
             // Validate name fields
             const validSurname = validateNameInput('surname', 'surnameWarning');
             const validFirstname = validateNameInput('firstname', 'firstnameWarning');
-            const validMiddlename = validateNameInput('middlename', 'middlenameWarning');
+            const validMiddlename = validateNameInput('middlename', 'middlenameWarning', false);
             if (!validSurname || !validFirstname || !validMiddlename) {
                 return;
             }
@@ -116,32 +121,30 @@
             }
             // Show clarification modal
             document.getElementById('clarificationModal').style.display = 'flex';
-        })  
-        document.getElementById('backBtn').addEventListener('click', function() {
-            document.getElementById('clarificationModal').style.display = 'none';
-        })  
-        document.getElementById('confirmBtn').addEventListener('click', function() {
-            // Submit form with GET method to result.html
-            const surname = encodeURIComponent(document.getElementById('surname').value.trim());
-            const firstname = encodeURIComponent(document.getElementById('firstname').value.trim());
-            const middlename = encodeURIComponent(document.getElementById('middlename').value.trim());
-            const rate = encodeURIComponent(document.getElementById('rate').value);
-            const days = encodeURIComponent(document.getElementById('daysWorked').value);
-            window.location.href = `result.html?surname=${surname}&firstname=${firstname}&middlename=${middlename}&rate=${rate}&daysWorked=${days}`;
-        })
-    </script>
-    <script>
-        // Highlight RESULT tab in modal
-        document.getElementById('computeBtn').addEventListener('click', function() {
             document.getElementById('formTab').classList.remove('active-tab');
             document.getElementById('resultTab').classList.add('active-tab');
         });
-        // Restore FORM tab highlight when modal is closed
+
         document.getElementById('backBtn').addEventListener('click', function() {
+            document.getElementById('clarificationModal').style.display = 'none';
             document.getElementById('resultTab').classList.remove('active-tab');
             document.getElementById('formTab').classList.add('active-tab');
         });
+
+        document.getElementById('confirmBtn').addEventListener('click', function() {
+            // Prepare values
+            const surname = encodeURIComponent(document.getElementById('surname').value.trim());
+            const firstname = encodeURIComponent(document.getElementById('firstname').value.trim());
+            let middlename = document.getElementById('middlename').value.trim();
+            let middleParam = "";
+            if (middlename.length > 0) {
+                // Use only the first letter as initial, uppercase
+                middleParam = encodeURIComponent(middlename[0].toUpperCase() + ".");
+            }
+            const rate = encodeURIComponent(document.getElementById('rate').value);
+            const days = encodeURIComponent(document.getElementById('daysWorked').value);
+            window.location.href = `result.html?surname=${surname}&firstname=${firstname}&middlename=${middleParam}&rate=${rate}&daysWorked=${days}`;
+        });
     </script>
 </body>
-
 </html>
