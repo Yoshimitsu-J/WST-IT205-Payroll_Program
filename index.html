@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="GRCIcon.png" type="image/png">
+    <link rel="icon" href="Images/GRCIcon.png" type="image/png">
     <link rel="stylesheet" href="styles.css">
     <title>Payroll Calculator</title>
 </head>
@@ -11,21 +11,31 @@
     <div class="navigationbar">
         <div class="logo">
             <img src="Images/Navigationlogo.png" class="navlogo" alt="Logo">
-            <h1>GRC Payroll Calculator</h1>
-            <!-- I don't want to use GRC's name -->
+            <h1>Payroll Calculator</h1>
         </div>
         <div class="pages">
-            <a href="index.html" class="formpage">FORM</a>
-            <a href="result.html" class="resultpage">RESULT</a>
+            <a href="index.html" class="formpage active-tab" id="formTab">FORM</a>
+            <a href="result.html" class="resultpage" id="resultTab">RESULT</a>
         </div>
     </div>
 
     <div class="form">
-        <form class="payroll-form" id="payrollForm" autocomplete="off" action="result.html" method="GET">
+        <form class="payroll-form" id="payrollForm" autocomplete="off">
             <h2>Payroll Computation</h2>
             <div class="input-group">
-                <label for="employeeName">Employee Name</label>
-                <input type="text" id="employeeName" name="employeeName" placeholder="e.g. Dela Cruz, Juan" required>
+                <label for="surname">Surname</label>
+                <input type="text" id="surname" name="surname" placeholder="e.g. Dela Cruz" required>
+                <span class="warning" id="surnameWarning"></span>
+            </div>
+            <div class="input-group">
+                <label for="firstname">Firstname</label>
+                <input type="text" id="firstname" name="firstname" placeholder="e.g. Juan" required>
+                <span class="warning" id="firstnameWarning"></span>
+            </div>
+            <div class="input-group">
+                <label for="middlename">Middlename</label>
+                <input type="text" id="middlename" name="middlename" placeholder="e.g. Santos" required>
+                <span class="warning" id="middlenameWarning"></span>
             </div>
             <div class="input-group">
                 <label for="rate">Daily Rate (₱)</label>
@@ -35,7 +45,7 @@
                 <label for="daysWorked">Days Worked</label>
                 <input type="number" id="daysWorked" name="daysWorked" min="0" placeholder="e.g. 22" required>
             </div>
-            <button type="submit" class="compute-btn" onclick="computePayroll()">Compute Payroll</button>
+            <button type="button" class="compute-btn" id="computeBtn">Compute Payroll</button>
 
             <div class="instructions">
                 <p><b>Information</b></p>
@@ -50,7 +60,87 @@
                 </ul>
             </div>
         </form>
+
+        <!-- Clarification Modal -->
+        <div id="clarificationModal" class="modal-bg" style="display:none;">
+            <div class="modal-content">
+                <p>I confirm that my information are correct.</p>
+                <div style="display:flex; gap:10px; margin-top:15px;">
+                    <button id="confirmBtn" class="compute-btn" style="flex:1;">Proceed</button>
+                    <button id="backBtn" class="compute-btn" style="flex:1; background:#ccc; color:#222;">Back</button>
+                </div>
+            </div>
+        </div>
     </div>
     <script src="script.js"></script>
+    <script>
+        function isAlpha(str) {
+        return /^[A-Za-z\s\-]+$/.test(str);
+    }
+
+        function validateNameInput(inputId, warningId) {
+            const value = document.getElementById(inputId).value.trim();
+            const warning = document.getElementById(warningId);
+            if (!isAlpha(value)) {
+                warning.textContent = "Invalid character";
+                return false;
+            } else {
+                warning.textContent = "";
+                return true;
+            }
+        }
+
+        document.getElementById('surname').addEventListener('input', function() {
+            validateNameInput('surname', 'surnameWarning');
+        });
+        document.getElementById('firstname').addEventListener('input', function() {
+            validateNameInput('firstname', 'firstnameWarning');
+        });
+        document.getElementById('middlename').addEventListener('input', function() {
+            validateNameInput('middlename', 'middlenameWarning');
+        })  
+        document.getElementById('computeBtn').addEventListener('click', function() {
+            // Validate name fields
+            const validSurname = validateNameInput('surname', 'surnameWarning');
+            const validFirstname = validateNameInput('firstname', 'firstnameWarning');
+            const validMiddlename = validateNameInput('middlename', 'middlenameWarning');
+            if (!validSurname || !validFirstname || !validMiddlename) {
+                return;
+            }
+            // Validate other fields
+            const rate = document.getElementById('rate').value;
+            const days = document.getElementById('daysWorked').value;
+            if (!rate || !days) {
+                alert("Please fill in all fields.");
+                return;
+            }
+            // Show clarification modal
+            document.getElementById('clarificationModal').style.display = 'flex';
+        })  
+        document.getElementById('backBtn').addEventListener('click', function() {
+            document.getElementById('clarificationModal').style.display = 'none';
+        })  
+        document.getElementById('confirmBtn').addEventListener('click', function() {
+            // Submit form with GET method to result.html
+            const surname = encodeURIComponent(document.getElementById('surname').value.trim());
+            const firstname = encodeURIComponent(document.getElementById('firstname').value.trim());
+            const middlename = encodeURIComponent(document.getElementById('middlename').value.trim());
+            const rate = encodeURIComponent(document.getElementById('rate').value);
+            const days = encodeURIComponent(document.getElementById('daysWorked').value);
+            window.location.href = `result.html?surname=${surname}&firstname=${firstname}&middlename=${middlename}&rate=${rate}&daysWorked=${days}`;
+        })
+    </script>
+    <script>
+        // Highlight RESULT tab in modal
+        document.getElementById('computeBtn').addEventListener('click', function() {
+            document.getElementById('formTab').classList.remove('active-tab');
+            document.getElementById('resultTab').classList.add('active-tab');
+        });
+        // Restore FORM tab highlight when modal is closed
+        document.getElementById('backBtn').addEventListener('click', function() {
+            document.getElementById('resultTab').classList.remove('active-tab');
+            document.getElementById('formTab').classList.add('active-tab');
+        });
+    </script>
 </body>
 </html>
